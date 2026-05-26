@@ -1,4 +1,8 @@
 import express from 'express';
+
+process.on('unhandledRejection', (reason) => {
+    console.error('\n -> Unhandled rejection (server will keep running): ' + reason)
+})
 import { ParseServer } from 'parse-server'
 //var ParseDashboard = require('parse-dashboard');
 import ParseNode from 'parse/node.js'
@@ -339,23 +343,19 @@ const startIndex = async () => {
 
     const setupParseServer = async () => {
         console.log("\nSTARTING PARSE SERVER")
-        return new Promise(async (resolve, reject) => {
-            const serv = new ParseServer({
-                databaseURI: databaseURI,
-                appId: process.env.APP_ID,
-                masterKey: process.env.MASTER_KEY,
-                port: port,
-                masterKeyIps: ['0.0.0.0/0', '::/0'],
-                allowClientClassCreation: false,
-                allowExpiredAuthDataToken: false
-            });
+        const serv = new ParseServer({
+            databaseURI: databaseURI,
+            appId: process.env.APP_ID,
+            masterKey: process.env.MASTER_KEY,
+            port: port,
+            masterKeyIps: ['0.0.0.0/0', '::/0'],
+            allowClientClassCreation: false,
+            allowExpiredAuthDataToken: false
+        });
 
-            await serv.start().then(() => {
-                app.use('/parse', serv.app);
-                console.log(" -> ParseNode server started")
-                resolve()
-            })
-        })
+        await serv.start();
+        app.use('/parse', serv.app);
+        console.log(" -> ParseNode server started")
     }
 
     await startServer()
