@@ -21,12 +21,15 @@ async function getParseId() {
     axios.post('/api/parseAppId')
       .then((response) => {
         localStorage.setItem('parse_app_id', response.data)
+        //console.log("  --> App id in localstorage "+localStorage.getItem('parse_app_id'))
         resolve()
       })
       .catch((error) => {
         console.log(" -> Error getting app id " + error)
         reject(error)
       });
+
+
   })
 }
 </script>
