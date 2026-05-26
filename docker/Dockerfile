@@ -1,7 +1,8 @@
 FROM node:18-alpine
-RUN apk add bash
+RUN apk add --no-cache bash python3 make g++
 WORKDIR /app
-ADD ./ .
+COPY package.json ./
 RUN npm install
+COPY . .
 RUN npm run build
 CMD npm start
