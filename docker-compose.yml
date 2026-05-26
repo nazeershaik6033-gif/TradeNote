@@ -3,7 +3,7 @@ services:
   tradenote:
     container_name: tradenote_app
     hostname: tradenote_app
-    image: eleventrading/tradenote:latest
+    image: ghcr.io/nazeershaik6033-gif/tradenote:latest
     ports:
       - 8080:8080
     links:
