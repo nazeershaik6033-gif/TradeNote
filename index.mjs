@@ -359,14 +359,18 @@ const startIndex = async () => {
     }
 
     await startServer()
-    await setupParseServer()
     await runServer()
 
-    if (process.env.PARSE_DASHBOARD) app.use('/parseDashboard', parseDashboard)
-
-    ParseNode.initialize(process.env.APP_ID)
-    ParseNode.serverURL = "http://localhost:" + port + "/parse"
-    ParseNode.masterKey = process.env.MASTER_KEY
+    try {
+        await setupParseServer()
+        ParseNode.initialize(process.env.APP_ID)
+        ParseNode.serverURL = "http://localhost:" + port + "/parse"
+        ParseNode.masterKey = process.env.MASTER_KEY
+        if (process.env.PARSE_DASHBOARD) app.use('/parseDashboard', parseDashboard)
+    } catch (err) {
+        console.error('\n -> Parse Server failed to start: ' + err.message)
+        console.error(' -> The frontend will still be served, but login/data features require a working MongoDB connection.')
+    }
 
 }
 startIndex()
